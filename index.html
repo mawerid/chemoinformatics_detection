@@ -202,7 +202,7 @@
 
 
 	function parsePredict(data) {
-		const ics = JSON.parse(data);
+		const ics = data;
 
 		const ic = ics['ic'];
 		const cc = ics['cc'];
@@ -220,7 +220,7 @@
 	}
 
 	function getPredict(smiles) {
-		const url = "https://domain.ru/predict/" + encodeURI(smiles);
+		const url = "http://109.248.175.102/pd?sm=" + encodeURI(smiles);
 		$.ajax({url: url, crossDomain: true, success: parsePredict,
 			error: function (jqXHR, textStatus) {
 				console.error("Ajax error: " + textStatus);
@@ -262,11 +262,8 @@
 	function readInput(updateSmiles = true) {
 		resetPredict();
 		const smiles = smiles_.value.trim();
-		//getPredict(smiles);
+		getPredict(smiles);
 		if (smiles == null || smiles === '') return;
-		const mock1 = getRandomFloat(10);
-		const mock2 = getRandomFloat(10);
-		parsePredict(JSON.stringify({'ic': getRandomFloat(10), 'cc': getRandomFloat(10), 'si': mock2/mock1 }));
 		if (updateSmiles) readAppletSmilesAsGenericMolecule(smiles);
 	}
 
