@@ -273,6 +273,7 @@
 		dmolViewer.clear();
 		dmolViewer.addModel(sdf, 'sdf');
 		dmolViewer.setStyle({stick:{color:'lightgray', opacity:'1.0'}, sphere:{color:'gray', radius: 0.4}});
+		dmolViewer.spin('vy', 0.4);
 		dmolViewer.zoomTo();
 		dmolViewer.render();
 	}
