@@ -220,7 +220,7 @@
 	}
 
 	function getPredict(smiles) {
-		const url = "http://109.248.175.102/pd?sm=" + encodeURI(smiles);
+		const url = "https://109.248.175.102/pd?sm=" + encodeURI(smiles);
 		$.ajax({url: url, crossDomain: true, success: parsePredict,
 			error: function (jqXHR, textStatus) {
 				console.error("Ajax error: " + textStatus);
