@@ -27,7 +27,7 @@
 </head>
 <body>
 <div class="container-scroller">
-	<nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row" style="position: absolute !important;">
+	<nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
 		<div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
 			<div class="me-3">
 				<button class="navbar-toggler navbar-toggler align-self-center" type="button" data-bs-toggle="minimize">
@@ -101,7 +101,7 @@
 				</div>
 
 				<div class="row">
-					<div class="col-md-6 grid-margin stretch-card">
+					<div class="col-lg-6 grid-margin stretch-card">
 						<div id="co2-status-card" class="card card-rounded">
 							<div class="card-body">
 								<h4 class="card-title card-title-dash">SMILES formula</h4>
@@ -113,7 +113,7 @@
 						</div>
 					</div>
 
-					<div class="col-md-2 grid-margin stretch-card">
+					<div class="col-lg-2 grid-margin stretch-card">
 						<div id="IC50" class="card card-rounded visually-hidden">
 							<div class="card-body">
 								<h4 class="card-title card-title-dash text-capitalize" style="text-transform: none !important;">IC50</h4>
@@ -122,7 +122,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-2 grid-margin stretch-card">
+					<div class="col-lg-2 grid-margin stretch-card">
 						<div id="CC50" class="card card-rounded visually-hidden">
 							<div class="card-body">
 								<h4 class="card-title card-title-dash text-capitalize" style="text-transform: none !important;">CC50</h4>
@@ -132,7 +132,7 @@
 						</div>
 					</div>
 
-					<div class="col-md-2 grid-margin stretch-card">
+					<div class="col-lg-2 grid-margin stretch-card">
 						<div id="SI" class="card bg-inverse-success card-rounded visually-hidden">
 							<div class="card-body">
 								<h4 class="card-title card-title-dash text-white text-capitalize" style="text-transform: none !important;">SI</h4>
@@ -148,7 +148,7 @@
 </div>
 <footer class="footer">
 	<div class="d-sm-flex justify-content-center justify-content-sm-between">
-		<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">For Atomic Hackathon.</span>
+		<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Big thanks to each open-source project.</span>
 		<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">GitHub <a href="https://github.com/mawerid/chemoinformatics_detection" target="_blank">repository</a></span>
 		<span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2023. All rights reserved.</span>
 	</div>
@@ -156,9 +156,6 @@
 <script src="vendors/js/vendor.bundle.base.js"></script>
 <script src="jsme/jsme.nocache.js"></script>
 <script src="js/3Dmol-min.js"></script>
-<script src="vendors/chart.js/Chart.min.js"></script>
-<script src="vendors/progressbar.js/progressbar.min.js"></script>
-
 <script>
 	const dmol_ = document.getElementById('dmol_container');
 	const dmolViewer = $3Dmol.createViewer(dmol_, {});
@@ -220,7 +217,7 @@
 	}
 
 	function getPredict(smiles) {
-		const url = "http://109.248.175.102/pd?sm=" + encodeURI(smiles);
+		const url = "https://109.248.175.102/pd?sm=" + encodeURI(smiles);
 		$.ajax({url: url, crossDomain: true, success: parsePredict,
 			error: function (jqXHR, textStatus) {
 				console.error("Ajax error: " + textStatus);

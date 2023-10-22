@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Pyatom's task</title>
+	<link rel="stylesheet" href="vendors/feather/feather.css">
+	<link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
+	<link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">
+	<link rel="stylesheet" href="vendors/typicons/typicons.css">
+	<link rel="stylesheet" href="vendors/simple-line-icons/css/simple-line-icons.css">
+	<link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
+	<link rel="stylesheet" href="css/vertical-layout-light/style.css">
+	<link rel="shortcut icon" href="images/favicon.png" />
+	<style>
+		.bold { font-weight: bold; }
+		small { font-size: 0.5em; }
+		.mol-container {
+			width: 100%;
+			height: 400px;
+			position: relative;
+		}
+		.form-group {
+			margin-bottom: 0;
+		}
+	</style>
+</head>
+<body>
+<div class="container-scroller">
+	<nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
+		<div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+			<div class="me-3">
+				<button class="navbar-toggler navbar-toggler align-self-center" type="button" data-bs-toggle="minimize">
+					<span class="icon-menu"></span>
+				</button>
+			</div>
+			<div>
+				<a class="navbar-brand brand-logo" href="index.html">Pyatom</a>
+				<a class="navbar-brand brand-logo-mini" href="index.html"><img src="images/logo-mini.svg" alt="logo"/></a>
+			</div>
+		</div>
+		<div class="navbar-menu-wrapper d-flex align-items-top" style="padding-top: 30px !important; height: 97px !important; justify-content: space-between !important;">
+			<ul class="navbar-nav">
+				<li class="nav-item font-weight-semibold ms-0">
+					<h1 class="welcome-text"><span class="text-black fw-bold">Task</span></h1>
+					<h3 class="welcome-sub-text">According to <a href="https://web.archive.org/web/20231011154757/https://digital.mephi.ru/atomichack" target="_blank">Atomic Hackathon</a></h3>
+				</li>
+			</ul>
+			<button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
+				<span class="mdi mdi-menu"></span>
+			</button>
+		</div>
+	</nav>
+	<div class="container-fluid page-body-wrapper">
+		<nav class="sidebar sidebar-offcanvas" id="sidebar">
+			<ul class="nav">
+				<li class="nav-item">
+					<a class="nav-link" href="index.html">
+						<i class="mdi mdi-molecule menu-icon"></i>
+						<span class="menu-title">Predict</span>
+					</a>
+				</li>
+				<li class="nav-item active">
+					<a class="nav-link" href="about.html">
+						<i class="mdi mdi-thought-bubble-outline menu-icon"></i>
+						<span class="menu-title">About</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
+		<div class="main-panel">
+			<div class="content-wrapper">
+				<div class="row">
+					<div class="col-md-6 grid-margin stretch-card">
+						<div class="card card-rounded">
+							<div class="card-body overflow-hidden">
+								<h3 class="card-title card-title-dash">Task</h3>
+								<ul class="card-title card-description">
+									<li>Based on available data on a chemical compound, predict the value of its Selectivity Index (SI) or IC50/CC50.</li>
+									<li>Predicting only the IC50 or CC50 value is acceptable.</li>
+									<li>It is possible to solve the classification problem into a significant number of classes rather than predicting the exact values of the specified indices.</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6 grid-margin stretch-card">
+						<div class="card card-rounded">
+							<div class="card-body overflow-hidden">
+								<h3 class="card-title card-title-dash">Result Format</h3>
+								<ul class="card-title card-description">
+									<li>.ipynb file with an overview of the provided (or additionally found) data</li>
+									<li>.ipynb file with the model(s) and training procedure, comparison of different models, and identification of the best ones.</li>
+									<li>Detailed description of the data preprocessing procedure considering various options</li>
+									<li>Additional program files in a convenient format</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6 grid-margin stretch-card">
+						<div class="card card-rounded">
+							<div class="card-body overflow-hidden">
+								<h3 class="card-title card-title-dash">Data</h3>
+								<ul class="card-title card-description">
+									<li>Two datasets are provided - ~1400 compounds with calculated CC50/IC50/SI against the same H1N1 strain and ~35000 compounds with calculated IC50 against different H1N1 strains.</li>
+									<li>The primary focus should be on working with the provided data.</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6 grid-margin stretch-card">
+						<div class="card card-rounded">
+							<div class="card-body overflow-hidden">
+								<h3 class="card-title card-title-dash">Further Use</h3>
+								<ul class="card-title card-description">
+									<li>In case of significant results on a large volume of available and found data, the solution materials can be used for the research task of building machine learning models to predict the selectivity index.</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<footer class="footer">
+	<div class="d-sm-flex justify-content-center justify-content-sm-between">
+		<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Big thanks to each open-source project.</span>
+		<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">GitHub <a href="https://github.com/mawerid/chemoinformatics_detection" target="_blank">repository</a></span>
+		<span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2023. All rights reserved.</span>
+	</div>
+</footer>
+<script src="vendors/js/vendor.bundle.base.js"></script>
+<script src="jsme/jsme.nocache.js"></script>
+<script src="js/off-canvas.js"></script>
+<script src="js/hoverable-collapse.js"></script>
+<script src="js/template.js"></script>
+</body>
+</html>
