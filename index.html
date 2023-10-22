@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Pyatom's Predictor</title>
+	<link rel="stylesheet" href="vendors/feather/feather.css">
+	<link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
+	<link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">
+	<link rel="stylesheet" href="vendors/typicons/typicons.css">
+	<link rel="stylesheet" href="vendors/simple-line-icons/css/simple-line-icons.css">
+	<link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
+	<link rel="stylesheet" href="css/vertical-layout-light/style.css">
+	<link rel="shortcut icon" href="images/favicon.png" />
+	<style>
+		.bold { font-weight: bold; }
+		small { font-size: 0.5em; }
+		.mol-container {
+			width: 100%;
+			height: 400px;
+			position: relative;
+		}
+		.form-group {
+			margin-bottom: 0;
+		}
+	</style>
+</head>
+<body>
+<div class="container-scroller">
+	<nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row" style="position: absolute !important;">
+		<div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+			<div class="me-3">
+				<button class="navbar-toggler navbar-toggler align-self-center" type="button" data-bs-toggle="minimize">
+					<span class="icon-menu"></span>
+				</button>
+			</div>
+			<div>
+				<a class="navbar-brand brand-logo" href="index.html">Pyatom</a>
+				<a class="navbar-brand brand-logo-mini" href="index.html"><img src="images/logo-mini.svg" alt="logo"/></a>
+			</div>
+		</div>
+		<div class="navbar-menu-wrapper d-flex align-items-top" style="padding-top: 30px !important; height: 97px !important; justify-content: space-between !important;">
+			<ul class="navbar-nav">
+				<li class="nav-item font-weight-semibold ms-0">
+					<h1 class="welcome-text"><span class="text-black fw-bold">Predictor</span></h1>
+					<h3 class="welcome-sub-text">Predict molecule's properties</h3>
+				</li>
+			</ul>
+			<button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
+				<span class="mdi mdi-menu"></span>
+			</button>
+		</div>
+	</nav>
+	<div class="container-fluid page-body-wrapper">
+		<nav class="sidebar sidebar-offcanvas" id="sidebar">
+			<ul class="nav">
+				<li class="nav-item active">
+					<a class="nav-link" href="index.html">
+						<i class="mdi mdi-molecule menu-icon"></i>
+						<span class="menu-title">Predict</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="about.html">
+						<i class="mdi mdi-thought-bubble-outline menu-icon"></i>
+						<span class="menu-title">About</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
+		<div class="main-panel">
+			<div class="content-wrapper">
+				<div class="row">
+					<div class="col-md-auto grid-margin stretch-card">
+						<div class="card card-rounded">
+							<div class="card-body overflow-hidden">
+								<h4 class="card-title card-title-dash">2D-Editor</h4>
+								<p class="card-description">Edit molecule details</p>
+								<div class="row">
+									<div class="col-sm">
+										<div id="jsme_container"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md grid-margin stretch-card">
+						<div class="card card-rounded">
+							<div class="card-body pb-0">
+								<h4 class="card-title card-title-dash">3D-View</h4>
+								<p class="card-description">Explore molecule details</p>
+								<div class="row">
+									<div class="col-sm">
+										<div id="dmol_container" class="mol-container"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6 grid-margin stretch-card">
+						<div id="co2-status-card" class="card card-rounded">
+							<div class="card-body">
+								<h4 class="card-title card-title-dash">SMILES formula</h4>
+								<div class="form-group">
+									<label class="card-description" for="smiles">Resolver: cactus.nci.nih.gov/chemical/structure</label>
+									<input aria-multiline="true" id="smiles" name="smiles" class="form-control" type="text" placeholder="Paste formula here and press enter" value="">
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-2 grid-margin stretch-card">
+						<div id="IC50" class="card card-rounded visually-hidden">
+							<div class="card-body">
+								<h4 class="card-title card-title-dash text-capitalize" style="text-transform: none !important;">IC50</h4>
+								<p class="bold card-description">Less is better</p>
+								<h5 id="IC50_val" class="bold">0.32</h5>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-2 grid-margin stretch-card">
+						<div id="CC50" class="card card-rounded visually-hidden">
+							<div class="card-body">
+								<h4 class="card-title card-title-dash text-capitalize" style="text-transform: none !important;">CC50</h4>
+								<p class="bold card-description">More is better</p>
+								<h5 id="CC50_val" class="bold">0.32</h5>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-2 grid-margin stretch-card">
+						<div id="SI" class="card bg-inverse-success card-rounded visually-hidden">
+							<div class="card-body">
+								<h4 class="card-title card-title-dash text-white text-capitalize" style="text-transform: none !important;">SI</h4>
+								<p id="SI_desc" class="bold card-description">Safe</p>
+								<h5 id="SI_val" class="bold">0.32</h5>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<footer class="footer">
+	<div class="d-sm-flex justify-content-center justify-content-sm-between">
+		<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">For Atomic Hackathon.</span>
+		<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">GitHub <a href="https://github.com/mawerid/chemoinformatics_detection" target="_blank">repository</a></span>
+		<span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2023. All rights reserved.</span>
+	</div>
+</footer>
+<script src="vendors/js/vendor.bundle.base.js"></script>
+<script src="jsme/jsme.nocache.js"></script>
+<script src="js/3Dmol-min.js"></script>
+<script src="vendors/chart.js/Chart.min.js"></script>
+<script src="vendors/progressbar.js/progressbar.min.js"></script>
+
+<script>
+	const dmol_ = document.getElementById('dmol_container');
+	const dmolViewer = $3Dmol.createViewer(dmol_, {});
+
+	const smiles_ = document.getElementById('smiles');
+	smiles_.addEventListener("change", readInput)
+	$(smiles_).on("keyup",function wrapper(e) {
+		if(e.keyCode === 13) readInput(false);
+	});
+
+	let jsmeApplet;
+
+	const IC50 = { 'card': document.getElementById('IC50'), 'val': document.getElementById('IC50_val') };
+	const CC50 = { 'card': document.getElementById('CC50'), 'val': document.getElementById('CC50_val') };
+	const SI = { 'card': document.getElementById('SI'), 'desc': document.getElementById('SI_desc'), 'val': document.getElementById('SI_val') };
+
+	function setIC50(value) {
+		IC50.card.classList.remove('visually-hidden');
+		IC50.val.innerText = parseFloat(value).toFixed(4);
+	}
+
+	function setCC50(value) {
+		CC50.card.classList.remove('visually-hidden');
+		CC50.val.innerText = parseFloat(value).toFixed(4);
+	}
+
+	function setSI(value, lBorder, rBorder) {
+		SI.card.classList.remove('visually-hidden', 'bg-inverse-success', 'bg-inverse-warning', 'bg-danger');
+		SI.val.innerText = parseFloat(value).toFixed(4);
+		if (value < lBorder) {
+			SI.card.classList.add('bg-inverse-success');
+			SI.desc.innerText = 'Safe';
+		} else if (value > rBorder) {
+			SI.card.classList.add('bg-danger');
+			SI.desc.innerText = 'Danger';
+		} else {
+			SI.card.classList.add('bg-inverse-warning');
+			SI.desc.innerText = 'Unsafe';
+		}
+	}
+
+
+	function parsePredict(data) {
+		const ics = JSON.parse(data);
+
+		const ic = ics['ic'];
+		const cc = ics['cc'];
+		const si = ics['si'];
+
+		if (ic) setIC50(ic);
+		if (cc) setCC50(cc);
+		if (si) setSI(si, 1, 2);
+	}
+
+	function resetPredict() {
+		IC50.card.classList.add('visually-hidden');
+		CC50.card.classList.add('visually-hidden');
+		SI.card.classList.add('visually-hidden');
+	}
+
+	function getPredict(smiles) {
+		const url = "https://domain.ru/predict/" + encodeURI(smiles);
+		$.ajax({url: url, crossDomain: true, success: parsePredict,
+			error: function (jqXHR, textStatus) {
+				console.error("Ajax error: " + textStatus);
+			}
+		})
+	}
+
+	function jsmeOnLoad() {
+		jsmeApplet = new JSApplet.JSME("jsme_container", "380px", "340px", {
+			"options": "newlook,marker,border,zoom,nozoomgui",
+			"guicolor": "#FFFFFF",
+			"guiAtomColor": "#1f3bb2"
+		});
+		jsmeApplet.setCallBack("AfterStructureModified", jsmeAppletOnChange);
+	}
+
+	function getSdfAndExec(smiles, func) {
+		const url = "https://cactus.nci.nih.gov/chemical/structure/"
+				+ encodeURI(smiles) + "/file?format=sdf";
+
+		$.ajax({url: url, crossDomain: true, success: func,
+			error: function (jqXHR, textStatus) {
+				console.error("Ajax error: " + textStatus);
+			}
+		});
+	}
+
+	function jsmeAppletOnChange(jsmeEvent) {
+		const jsme = jsmeEvent.src;
+		const smiles = jsme.smiles();
+		smiles_.value = smiles;
+		getSdfAndExec(smiles, updateDmol);
+	}
+
+	function getRandomFloat(max = 1) {
+		return Math.random() * max;
+	}
+
+	function readInput(updateSmiles = true) {
+		resetPredict();
+		const smiles = smiles_.value.trim();
+		//getPredict(smiles);
+		if (smiles == null || smiles === '') return;
+		const mock1 = getRandomFloat(10);
+		const mock2 = getRandomFloat(10);
+		parsePredict(JSON.stringify({'ic': getRandomFloat(10), 'cc': getRandomFloat(10), 'si': mock2/mock1 }));
+		if (updateSmiles) readAppletSmilesAsGenericMolecule(smiles);
+	}
+
+	function updateView(sdf) {
+		jsmeApplet.readGenericMolecularInput(sdf);
+		updateDmol(sdf);
+	}
+
+	function updateDmol(sdf) {
+		dmolViewer.clear();
+		dmolViewer.addModel(sdf, 'sdf');
+		dmolViewer.setStyle({stick:{color:'lightgray', opacity:'1.0'}, sphere:{color:'gray', radius: 0.4}});
+		dmolViewer.zoomTo();
+		dmolViewer.render();
+	}
+
+	function readAppletSmilesAsGenericMolecule(smiles) {
+		//const isNotSdf = molecule && molecule.indexOf("M  END") === -1 && molecule.slice(0, 4) !== "$RXN";
+		getSdfAndExec(smiles, updateView);
+	}
+
+
+</script>
+<script src="js/off-canvas.js"></script>
+<script src="js/hoverable-collapse.js"></script>
+<script src="js/template.js"></script>
+</body>
+</html>
