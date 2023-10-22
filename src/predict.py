@@ -4,15 +4,14 @@ import xgboost as xgb
 from rdkit import Chem
 from rdkit.Chem import Descriptors
 from sklearn.preprocessing import FunctionTransformer
+from rdkit import Chem, DataStructs
+from rdkit.Chem import PandasTools, AllChem
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+import torch
 
-def mol_dsc_calc_SI(mols, descriptors):
-    return pd.DataFrame({k: f(Chem.MolFromSmiles(m)) for k, 
-                         f in descriptors.items()} for m in mols)
 
-
-def predict(data: str) -> [float, float, float]:
-    df = pd.DataFrame(data, columns = 'SMILES')
-    descriptors = {
+descriptors = {
                 "NumAliphaticHeterocycles": Descriptors.NumAliphaticHeterocycles,
                 "MR": Descriptors.MolMR,
                 "NumValenceElectrons": Descriptors.NumValenceElectrons,
@@ -21,9 +20,14 @@ def predict(data: str) -> [float, float, float]:
                 "NumRotatableBonds": Descriptors.NumRotatableBonds,
                 'fr_ether':Descriptors.fr_ether
             }
-    descriptors_transformer = FunctionTransformer(mol_dsc_calc_SI, descriptors)
-    X_des = descriptors_transformer.transform(df['SMILES'])
-    df_des = pd.DataFrame(X_des, columns = 'fr_pyridine')
+def mol_dsc_calc_SI(mols):
+    return pd.DataFrame({k: f(Chem.MolFromSmiles(m)) for k, 
+                         f in descriptors.items()} for m in mols)
+def predict(data: str) -> [float, float, float]:
+    descriptors_transformer = FunctionTransformer(mol_dsc_calc_SI)
+    X_des = descriptors_transformer.transform(pd.Series(data))
+    print(X_des)
+    df_des = pd.DataFrame(X_des)
     df_des = df_des.dropna(subset=['fr_pyridine'])
     reg = xgb.XGBRegressor()
     reg.load_model("weights\SI_XGB_model_after_GridSrch.json")
