@@ -156,7 +156,18 @@
 <script src="vendors/js/vendor.bundle.base.js"></script>
 <script src="jsme/jsme.nocache.js"></script>
 <script src="js/3Dmol-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+<script src="https://unpkg.com/@rdkit/rdkit/dist/RDKit_minimal.js"></script>
 <script>
+	const RDKit = window.initRDKitModule();
+
+	const url_prefix = 'https://raw.githubusercontent.com/mawerid/chemoinformatics_detection/main';
+	const onnxModelIC = url_prefix + '/models/xgboost_IC.onnx';
+	const onnxModelSI = url_prefix + '/models/xgboost_SI.onnx';
+	const sessionOption = { executionProviders: ['wasm'] };
+	const ic_inferenceSession = ort.InferenceSession.create(onnxModelIC, sessionOption);
+	const si_inferenceSession = ort.InferenceSession.create(onnxModelSI, sessionOption);
+
 	const dmol_ = document.getElementById('dmol_container');
 	const dmolViewer = $3Dmol.createViewer(dmol_, {});
 
@@ -197,7 +208,6 @@
 		}
 	}
 
-
 	function parsePredict(data) {
 		const ics = data;
 
@@ -216,13 +226,58 @@
 		SI.card.classList.add('visually-hidden');
 	}
 
-	function getPredict(smiles) {
-		const url = "https://109.248.175.102/pd?sm=" + encodeURI(smiles);
-		$.ajax({url: url, crossDomain: true, success: parsePredict,
-			error: function (jqXHR, textStatus) {
-				console.error("Ajax error: " + textStatus);
+	function getFeeds(smiles) {
+		RDKit.then(instance => instance.get_mol(smiles)).then(mol => {
+			if (!!mol) {
+				const allDescriptors = JSON.parse(mol.get_descriptors());
+				const dataIC = Float32Array.from([
+					0,
+					allDescriptors['CrippenMR'], // MolMR
+					0, // allDescriptors[''], // fr_bicyclic
+					0, // allDescriptors[''], // fr_NH1
+					0, // allDescriptors[''], // fr_methoxy
+					allDescriptors['lipinskiHBD'], // NHOHCount
+					0,
+					0
+				]);
+				const dataSI = Float32Array.from([
+					0,
+					allDescriptors['NumAliphaticHeterocycles'], // NumAliphaticHeterocycles
+					allDescriptors['CrippenMR'], // MolMR
+					0, // allDescriptors[''], // NumValenceElectrons
+					allDescriptors['lipinskiHBA'], // NOCount
+					0, // allDescriptors[''], // fr_pyridine
+					allDescriptors['NumRotatableBonds'], // NumRotatableBonds
+					0, // allDescriptors[''], // fr_ether
+				]);
+				getPredict(dataIC, dataSI);
 			}
-		})
+		});
+	}
+
+	function getPredict(icData, siData) {
+		const icTensorX = new ort.Tensor('float32', icData, [1, 8]);
+		const icFeeds = {float_input: icTensorX}
+
+		const siTensorX = new ort.Tensor('float32', siData, [1, 8]);
+		const siFeeds = {float_input: siTensorX}
+
+		ic_inferenceSession.then(model => model.run(icFeeds))
+				.then(icResult => {
+					return {'ic': Math.abs(icResult.variable.data[0])}
+				})
+				.then(result => {
+					si_inferenceSession.then(model => model.run(siFeeds))
+							.then(siResult => {
+								result['si'] = Math.abs(siResult.variable.data[0]);
+								return result;
+							})
+							.then(result => {
+								result['cc'] = result['ic'] * result['si'];
+								return result;
+							})
+							.then(result => parsePredict(result));
+				});
 	}
 
 	function jsmeOnLoad() {
@@ -250,6 +305,7 @@
 		const smiles = jsme.smiles();
 		smiles_.value = smiles;
 		getSdfAndExec(smiles, updateDmol);
+		getFeeds(smiles);
 	}
 
 	function getRandomFloat(max = 1) {
@@ -257,11 +313,12 @@
 	}
 
 	function readInput(updateSmiles = true) {
-		resetPredict();
 		const smiles = smiles_.value.trim();
-		getPredict(smiles);
 		if (smiles == null || smiles === '') return;
-		if (updateSmiles) readAppletSmilesAsGenericMolecule(smiles);
+		if (updateSmiles) {
+			resetPredict();
+			readAppletSmilesAsGenericMolecule(smiles);
+		}
 	}
 
 	function updateView(sdf) {
